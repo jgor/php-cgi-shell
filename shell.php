@@ -1,4 +1,6 @@
 <?php
+// php-cgi-shell
+// - jgor <jgor@indiecom.org>
 
 $dir = 'shell';
 $htaccess = '.htaccess';
